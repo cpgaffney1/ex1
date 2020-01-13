@@ -2,10 +2,18 @@ import pyglet
 import configs.planets
 from pyglet.gl import *
 import time
+from enum import Enum
 
 # Zooming constants
 ZOOM_IN_FACTOR = 1.2
 ZOOM_OUT_FACTOR = 1/ZOOM_IN_FACTOR
+
+
+class ScreenMode(Enum):
+    MENU = 1
+    MAP = 2
+    CLOSEUP = 3
+
 
 class Application(pyglet.window.Window):
 
@@ -16,6 +24,7 @@ class Application(pyglet.window.Window):
     click_time = 0
     click_count = 0
     zoomed_planet = None
+    screen_mode = ScreenMode.MAP
 
     def __init__(self):
         if self.fullscreen:
@@ -76,7 +85,7 @@ class Application(pyglet.window.Window):
         ]
 
         for planet in self.planets:
-            planet.virtual_location = planet.get_xy_location()
+            planet.location = planet.get_xy_location()
 
     def draw_planets(self):
         for planet in self.planets:
@@ -99,7 +108,7 @@ class Application(pyglet.window.Window):
         glViewport(0, 0, width, height)
 
     def on_resize(self, width, height):
-        if self.zoomed_planet is not None:
+        if self.screen_mode != ScreenMode.MAP:
             return
         if self.fullscreen:
             return
@@ -116,16 +125,18 @@ class Application(pyglet.window.Window):
         else:
             self.click_count = 1
             self.click_time = time.time()
+
         # DOUBLE CLICK
         if self.click_count >= 2:
             for planet in self.planets:
                 if planet.bounds_contain(x, y) and planet.can_zoom():
                     self.zoomed_planet = planet
+                    self.screen_mode = ScreenMode.CLOSEUP
                     return
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         # Move camera
-        if self.zoomed_planet is not None:
+        if self.screen_mode != ScreenMode.MAP:
             return
         self.left -= dx * self.zoom_level
         self.right -= dx * self.zoom_level
@@ -133,10 +144,10 @@ class Application(pyglet.window.Window):
         self.top -= dy * self.zoom_level
 
         for planet in self.planets:
-            planet.change_virtual_location(-dx, -dy, self.zoom_level)
+            planet.move(-dx, -dy, self.zoom_level)
 
     def on_mouse_scroll(self, x, y, dx, dy):
-        if self.zoomed_planet is not None:
+        if self.screen_mode != ScreenMode.MAP:
             return
         # Get scale factor
         f = ZOOM_IN_FACTOR if dy > 0 else ZOOM_OUT_FACTOR if dy < 0 else 1
@@ -170,15 +181,11 @@ class Application(pyglet.window.Window):
         glPushMatrix()
         # Clear window with ClearColor
         glClear(GL_COLOR_BUFFER_BIT)
-        # Set orthographic projection matrix
 
-        if self.zoomed_planet is not None:
-            width, height = self.size
-            glOrtho(0, width, 0, height, 1, -1)
-        else:
-            glOrtho(self.left, self.right, self.bottom, self.top, 1, -1)
+        width, height = self.size
+        glOrtho(0, width, 0, height, 1, -1)
 
-        if self.zoomed_planet is not None:
+        if self.screen_mode == ScreenMode.CLOSEUP:
             self.zoomed_planet.draw_zoomed()
         else:
             self.draw_planets()

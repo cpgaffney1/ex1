@@ -61,7 +61,7 @@ class Planet(Location):
 
         self.validate()
 
-        self.virtual_location = self.get_xy_location()
+        self.location = self.get_xy_location()
 
     def validate(self):
         if self.primary_body is None:
@@ -75,6 +75,10 @@ class Planet(Location):
         px, py = self.virtual_location
         self.virtual_location = (px - dx * zoom_level, py - dy * zoom_level)
 
+    def move(self, dx, dy, zoom_level):
+        px, py = self.location
+        self.location = (px - dx * zoom_level, py - dy * zoom_level)
+
     def get_xy_location(self):
         if self.primary_body is None:
             return self.location[0], self.location[1]
@@ -84,7 +88,7 @@ class Planet(Location):
 
     def bounds_contain(self, x, y):
         x, y = float(x), float(y)
-        my_x, my_y = self.virtual_location
+        my_x, my_y = self.location
 
         d = math.sqrt((my_x - x) ** 2 + (my_y - y) ** 2)
         if self.name == 'Mars':
