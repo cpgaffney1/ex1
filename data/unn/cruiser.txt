@@ -1,0 +1,333 @@
+Henry Dunant
+Frédéric Passy
+Élie Ducommun
+Charles Albert Gobat
+William Randal Cremer
+Bertha von Suttner
+Theodore Roosevelt
+Ernesto Teodoro Moneta
+Louis Renault
+Klas Pontus Arnoldson
+Fredrik Bajer
+Auguste Beernaert
+Paul Henri d'Estournelles de Constant
+Tobias Asser
+Alfred Fried
+Elihu Root
+Henri La Fontaine
+Woodrow Wilson
+Léon Bourgeois
+Hjalmar Branting
+Christian Lange
+Fridtjof Nansen
+Sir Austen Chamberlain
+Charles G. Dawes
+Aristide Briand
+Gustav Stresemann
+Ferdinand Buisson
+Ludwig Quidde
+Frank B. Kellogg
+Nathan Söderblom
+Jane Addams
+Nicholas Murray Butler
+Sir Norman Angell
+Arthur Henderson
+Carl von Ossietzky
+Carlos Saavedra Lamas
+The Viscount Cecil of Chelwood
+Cordell Hull
+Emily Greene Balch
+John Raleigh Mott
+The Lord Boyd-Orr
+Ralph Bunche
+Léon Jouhaux
+Albert Schweitzer
+George C. Marshall
+Lester Bowles Pearson
+Dominique Pire
+Philip Noel-Baker
+Albert Lutuli
+Dag Hammarskjöld
+Linus Pauling
+Red Cross
+Martin Luther King, Jr.
+René Cassin
+Norman E. Borlaug
+Willy Brandt
+Henry Kissinger
+Seán MacBride
+Eisaku Satō
+Andrei Sakharov
+Betty Williams
+Mairead Corrigan
+Amnesty International
+Muhammad Anwar el-Sadat
+Menachem Begin
+Mother Teresa
+Adolfo Pérez Esquivel
+Alva Myrdal
+Alfonso García Robles
+Lech Wałęsa
+Desmond Tutu
+Elie Wiesel
+Óscar Arias
+Tenzin Gyatso
+Mikhail Gorbachev
+Aung San Suu Kyi
+Rigoberta Menchú
+Nelson Mandela
+Frederik Willem de Klerk
+Yasser Arafat
+Yitzhak Rabin
+Shimon Peres
+Joseph Rotblat
+Carlos Filipe Ximenes Belo
+José Ramos-Horta
+Jody Williams
+John Hume
+David Trimble
+Médecins Sans Frontières
+Kim Dae-jung
+United Nations
+Kofi Annan
+Jimmy Carter
+Shirin Ebadi
+Wangari Muta Maathai
+Mohamed ElBaradei
+Muhammad Yunus
+Grameen Bank
+Al Gore
+Martti Ahtisaari
+Barack Obama
+Liu Xiaobo
+Ellen Johnson Sirleaf
+Leymah Gbowee
+Tawakkul Karman
+European Union
+Kailash Satyarthi
+Malala Yousafzai
+Juan Manuel Santos
+Denis Mukwege
+Nadia Murad
+Abiy Ahmed
+Alan Perlis
+Maurice Wilkes
+Richard Hamming
+Marvin Minsky
+James H. Wilkinson
+John McCarthy
+Edsger W. Dijkstra
+Charles Bachman
+Donald Knuth
+Allen Newell
+Herbert A. Simon
+Michael O. Rabin
+Dana Scott
+John Backus
+Robert W. Floyd
+Kenneth E. Iverson
+Tony Hoare
+Edgar F. Codd
+Stephen A. Cook
+Ken Thompson
+Dennis M. Ritchie
+Niklaus Wirth
+Richard M. Karp
+John Hopcroft
+Robert Tarjan
+John Cocke
+Ivan Sutherland
+William Kahan
+Fernando J. Corbató
+Robin Milner
+Butler W. Lampson
+Juris Hartmanis
+Richard E. Stearns
+Edward Feigenbaum
+Raj Reddy
+Manuel Blum
+Amir Pnueli
+Douglas Engelbart
+Jim Gray
+Frederick P. Brooks
+Andrew Chi-Chih Yao
+Ole-Johan Dahl
+Kristen Nygaard
+Ron Rivest
+Adi Shamir
+Leonard M. Adleman
+Alan Kay
+Vint Cerf
+Bob Kahn
+Peter Naur
+Frances E. Allen
+Edmund M. Clarke
+E. Allen Emerson
+Joseph Sifakis
+Barbara Liskov
+Charles P. Thacker
+Leslie G. Valiant
+Judea Pearl
+Silvio Micali
+Shafi Goldwasser
+Leslie Lamport
+Michael Stonebraker
+Martin E. Hellman
+Whitfield Diffie
+Tim Berners-Lee
+John L. Hennessy
+David Patterson
+Yoshua Bengio
+Geoffrey Hinton
+Yann LeCun
+Phobos
+Deimos
+Io
+Europa
+Ganymede
+Callisto
+Amalthea
+Himalia
+Elara
+Pasiphae
+Sinope
+Lysithea
+Carme
+Ananke
+Leda
+Thebe
+Adrastea
+Metis
+Callirrhoe
+Themisto
+Megaclite
+Taygete
+Chaldene
+Harpalyke
+Kalyke
+Iocaste
+Erinome
+Isonoe
+Praxidike
+Autonoe
+Thyone
+Hermippe
+Aitne
+Eurydome
+Euanthe
+Euporie
+Orthosie
+Sponde
+Kale
+Pasithee
+Hegemone
+Mneme
+Aoede
+Thelxinoe
+Arche
+Kallichore
+Helike
+Carpo
+Eukelade
+Mimas
+Enceladus
+Tethys
+Dione
+Rhea
+Titan
+Hyperion
+Iapetus
+Phoebe
+Janus
+Epimetheus
+Helene
+Telesto
+Calypso
+Atlas
+Prometheus
+Pandora
+Pan
+Ymir
+Paaliaq
+Tarvos
+Ijiraq
+Suttungr
+Kiviuq
+Mundilfari
+Albiorix
+Skathi
+Erriapus
+Siarnaq
+Thrymr
+Narvi
+Methone
+Pallene
+Polydeuces
+Daphnis
+Aegir
+Bebhionn
+Bergelmir
+Bestla
+Farbauti
+Fenrir
+Fornjot
+Hati
+Hyrrokkin
+Kari
+Loge
+Skoll
+Surtur
+Anthe
+Jarnsaxa
+Greip
+Tarqeq
+Aegaeon
+Ariel
+Umbriel
+Titania
+Oberon
+Miranda
+Cordelia
+Ophelia
+Bianca
+Cressida
+Desdemona
+Juliet
+Portia
+Rosalind
+Belinda
+Puck
+Caliban
+Sycorax
+Prospero
+Setebos
+Stephano
+Trinculo
+Francisco
+Margaret
+Ferdinand
+Perdita
+Mab
+Cupid
+Triton
+Nereid
+Naiad
+Thalassa
+Despina
+Galatea
+Larissa
+Proteus
+Halimede
+Psamathe
+Sao
+Laomedeia
+Neso
+Hippocamp
+Vanth
+Pluto
+Charon
+Nix
+Hydra
+Kerberos
+Styx
+Actaea

@@ -1,8 +1,11 @@
 from src.map.Location import Location
 from src.gfx.shapes_util import *
 from pyglet.gl import *
-from src.map.astronomical_util import radial_location_to_xy, au_to_pixels
+from src.map.astronomical_util import radial_location_px_to_cartesian_px, milli_au_to_pixels, radial_location_to_cartesian
 from enum import Enum
+from src.gameplay.EventManager import event_manager, Frequency
+from src.map.NavigationComputer import RadialPosition, Position
+import random
 
 orbit_color = (0, 128, 255)
 sun_color = (255, 255, 0)
@@ -18,14 +21,15 @@ class PlanetType(Enum):
     COMET = 7
 
 
+# RADIUS IN MILLI AU
 planet_type_to_radius = {
-    PlanetType.STAR: 0.2,
-    PlanetType.PLANET: 0.05,
-    PlanetType.GAS_GIANT: 0.1,
-    PlanetType.DWARF_PLANET: 0.025,
-    PlanetType.MOON: 0.025,
-    PlanetType.ASTEROID: 0.01,
-    PlanetType.COMET: 0.01,
+    PlanetType.STAR: 200,
+    PlanetType.PLANET: 50,
+    PlanetType.GAS_GIANT: 100,
+    PlanetType.DWARF_PLANET: 25,
+    PlanetType.MOON: 25,
+    PlanetType.ASTEROID: 10,
+    PlanetType.COMET: 10,
 }
 
 
@@ -36,88 +40,100 @@ class Planet(Location):
                  img_name='',
                  img_anchor=(0, 0),
                  # astronomical params
-                 radius=0,  # in AU
-                 period=0,  # in days
-                 location=(0, 0),  # x, y only for the sun
+                 radius=None,  # in AU
+                 period=None,  # in days
+                 draw_location=(0, 0),  # x, y only for the sun
                  primary_body=None,  # planet object, None should be the sun
-                 radial_degrees=0,  # degrees, not applicable to sun.
+                 radial_degrees=None,  # degrees, not applicable to sun.
                  planet_type=None,  # PlanetType enum
                  # details
                  controller=None,  # faction object. None means not controllable
                  ):
-        Location.__init__(self)
+        assert planet_type is not None
+        self.planet_type = planet_type
 
-        self.name = name
+        if primary_body is None:
+            assert name == 'Sol'
+            assert self.is_sun()
+        if not self.is_sun():
+            assert radius is not None
+            assert period is not None
+            assert primary_body is not None
+            assert radial_degrees is not None
+        radial_pos = None
+        cartesian_pos = None
+        if self.is_sun():
+            cartesian_pos = Position(x=0, y=0)
+            orbits = False
+        else:
+            radius = 1000. * radius  # NOTE: SELF.RADIUS IS INPUT AS AU, BUT STORED AS MILLI AU
+            radial_velocity = 360. / period  # 360 degrees per year
+            radial_pos = RadialPosition(primary_body=primary_body, r=radius, theta=radial_degrees, omega=radial_velocity)
+            orbits = True
+        Location.__init__(self,
+                          name=name,
+                          radial_position=radial_pos,
+                          cartesian_position=cartesian_pos,
+                          orbits=orbits,
+                          draw_location=draw_location)
+
         self.img_name = img_name
         self.img_anchor = img_anchor
-        self.radius = radius
-        self.period = period
-        self.location = location
-        self.primary_body = primary_body
-        self.radial_degrees = radial_degrees
+
         self.planet_type = planet_type
 
         self.controller = controller
 
-        self.validate()
+        self.draw_location = self.px_location()
 
-        self.location = self.get_xy_location()
-
-    def validate(self):
-        if self.primary_body is None:
-            assert self.name == 'Sol'
-        assert self.planet_type is not None
-
-    def can_zoom(self):
-        return self.img_name != ''
-
-    def change_virtual_location(self, dx, dy, zoom_level):
-        px, py = self.virtual_location
-        self.virtual_location = (px - dx * zoom_level, py - dy * zoom_level)
-
-    def move(self, dx, dy, zoom_level):
-        px, py = self.location
-        self.location = (px - dx * zoom_level, py - dy * zoom_level)
-
-    def get_xy_location(self):
-        if self.primary_body is None:
-            return self.location[0], self.location[1]
-        else:
-            loc = radial_location_to_xy(self.primary_body.get_xy_location(), self.radius, self.radial_degrees)
-            return loc
+    # def anchor_points(self):
+    #     body_radius = planet_type_to_radius[self.planet_type]
+    #     angular_velocity = 360. / self.period  # 360 degrees / period days
+    #     l1 = RadialPosition(self.primary_body.radial_position(), self.radius + body_radius, self.radial_degrees,
+    #                         angular_velocity)
+    #     l2 = RadialPosition(self.primary_body.radial_position(), self.radius - body_radius, self.radial_degrees,
+    #                         angular_velocity)
+    #     return [l1, l2]
+    # def low_orbit(self, degrees=None):
+    #     if degrees is None:
+    #         degrees = random.randint(0, 360)
+    #     body_radius = planet_type_to_radius[self.planet_type]
+    #     period = 10  # days (unrealistic)
+    #     angular_velocity = 360. / period  # 360 degrees / period days
+    #     return RadialPosition((x, y), body_radius, degrees, angular_velocity)
 
     def bounds_contain(self, x, y):
         x, y = float(x), float(y)
-        my_x, my_y = self.location
-
+        my_x, my_y = self.draw_location
         d = math.sqrt((my_x - x) ** 2 + (my_y - y) ** 2)
-        if self.name == 'Mars':
-            print('dist')
-            print(d)
-
-            print(au_to_pixels(planet_type_to_radius[self.planet_type]))
-            print((x, y))
-            print((my_x, my_y))
-        return d < au_to_pixels(planet_type_to_radius[self.planet_type])
+        return d < milli_au_to_pixels(planet_type_to_radius[self.planet_type])
 
     def draw(self):
         # orbit line
-        if self.primary_body is None:
-            body_radius_pixels = au_to_pixels(planet_type_to_radius[self.planet_type])
-            body = make_filled_circle(self.get_xy_location(), body_radius_pixels, sun_color)
+        print(self.planet_type)
+        if self.is_sun():
+            body_radius_pixels = milli_au_to_pixels(planet_type_to_radius[self.planet_type])
+            body = make_filled_circle(self.px_location(), body_radius_pixels, sun_color)
         else:
-            orbit_radius_pixels = au_to_pixels(self.radius)
-            orbit = make_circle(self.primary_body.get_xy_location(), orbit_radius_pixels, orbit_color, num_points=math.ceil(self.radius) * 50)
+            radius = self.radial_position.r
+            orbit_radius_pixels = milli_au_to_pixels(radius)
+            orbit = make_circle(self.radial_position.primary_body.px_location(), orbit_radius_pixels, orbit_color, num_points=math.ceil(radius))
             orbit.draw(GL_LINE_LOOP)
 
-            body_radius_pixels = au_to_pixels(planet_type_to_radius[self.planet_type])
-            body = make_filled_circle(self.get_xy_location(), body_radius_pixels, self.controller.color)
+            body_radius_pixels = milli_au_to_pixels(planet_type_to_radius[self.planet_type])
+            body = make_filled_circle(self.px_location(), body_radius_pixels, self.controller.color)
 
-    def draw_zoomed(self):
-        if not self.img_name:
-            return False
-        img = pyglet.image.load('data/{}'.format(self.img_name))
-        img.blit(*self.img_anchor)
-        return True
+    def is_sun(self):
+        return self.planet_type == PlanetType.STAR
+
+    # def draw_zoomed(self):
+    #     if not self.img_name:
+    #         return False
+    #     img = pyglet.image.load('data/{}'.format(self.img_name))
+    #     img.blit(*self.img_anchor)
+    #     return True
+    #
+    # def can_zoom(self):
+    #     return self.img_name != ''
 
 

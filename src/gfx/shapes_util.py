@@ -33,7 +33,7 @@ def make_filled_circle(center, radius, color):
     glColor3f(*color)
 
     x, y = center
-    iterations = int(2 * radius * math.pi)
+    iterations = 25# int(2 * radius * math.pi)
     s = math.sin(2 * math.pi / iterations)
     c = math.cos(2 * math.pi / iterations)
 

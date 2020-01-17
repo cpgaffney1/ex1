@@ -3,8 +3,7 @@ import configs.factions as factions
 
 sun = Planet(
     name='Sol',
-    radius=0,
-    location=(0, 0),  # set dynamically
+    draw_location=(0, 0),  # set dynamically
     planet_type=PlanetType.STAR,
 )
 
@@ -140,7 +139,7 @@ chiron = Planet(
 mercury = Planet(
     name='Mercury',
     radius=0.4,
-    period=58,
+    period=120,  # this is wrong
     primary_body=sun,
     radial_degrees=230,
     planet_type=PlanetType.DWARF_PLANET,
@@ -159,7 +158,7 @@ venus = Planet(
 
 jupiter = Planet(
     name='Jupiter',
-    radius=2.4,
+    radius=3.1,
     period=365 * 11,
     primary_body=sun,
     radial_degrees=210,
@@ -213,7 +212,7 @@ callisto = Planet(
 
 saturn = Planet(
     name='Saturn',
-    radius=3.2,
+    radius=4.2,
     period=365 * 29,
     primary_body=sun,
     radial_degrees=180,
@@ -267,7 +266,7 @@ iapetus = Planet(
 
 uranus = Planet(
     name='Uranus',
-    radius=4.5,
+    radius=5.6,
     period=365 * 84,
     primary_body=sun,
     radial_degrees=350,
@@ -277,7 +276,7 @@ uranus = Planet(
 
 neptune = Planet(
     name='Neptune',
-    radius=5.6,
+    radius=6.7,
     period=365 * 164,
     primary_body=sun,
     radial_degrees=330,
@@ -298,7 +297,7 @@ triton = Planet(
 
 pluto = Planet(
     name='Pluto',
-    radius=6.7,
+    radius=7.9,
     period=365 * 247,
     primary_body=sun,
     radial_degrees=240,
