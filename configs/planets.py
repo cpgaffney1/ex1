@@ -1,9 +1,9 @@
-from src.map.Planet import Planet, PlanetType
+from src.map.Planet import Planet
+from src.map.astronomical_util import PlanetType
 import configs.factions as factions
 
 sun = Planet(
     name='Sol',
-    draw_location=(0, 0),  # set dynamically
     planet_type=PlanetType.STAR,
 )
 

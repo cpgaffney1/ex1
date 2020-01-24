@@ -1,11 +1,10 @@
 import pyglet
-import configs.planets
 from pyglet.gl import *
 from enum import Enum
 import time
 from src.gameplay.GameClock import game_clock
 from pyglet.window import key
-from src.gameplay.EventManager import event_manager
+import configs.configured_objects as cfg
 
 # Zooming constants
 ZOOM_IN_FACTOR = 1.2
@@ -24,9 +23,14 @@ class Application(pyglet.window.Window):
     resizable = False
     size = (1280, 720)
     planets = []
+    fleets = []
     click_time = 0
     click_count = 0
+
     zoomed_planet = None
+    selected_planet = None
+    selected_fleet = None
+
     screen_mode = ScreenMode.MAP
     previous_time = time.time()
 
@@ -45,52 +49,13 @@ class Application(pyglet.window.Window):
 
         assert game_clock.paused()
 
-        # Initialize camera values
-        self.left = 0
-        self.right = width
-        self.bottom = 0
-        self.top = height
         self.zoom_level = 1
         self.zoomed_width = width
         self.zoomed_height = height
 
-        configs.planets.sun.draw_location = (self.get_size()[0] / 2, self.get_size()[1] / 2)
-
-        self.planets = [
-            configs.planets.sun,
-            configs.planets.earth,
-            configs.planets.mars,
-            configs.planets.mercury,
-            configs.planets.venus,
-            configs.planets.jupiter,
-            configs.planets.saturn,
-            configs.planets.uranus,
-            configs.planets.neptune,
-            configs.planets.pluto,
-            # asteroids
-            configs.planets.ceres,
-            configs.planets.vesta,
-            configs.planets.pallas,
-            configs.planets.hygiea,
-            configs.planets.juno,
-            configs.planets.psyche,
-            configs.planets.eros,
-            configs.planets.chiron,
-            # moons
-            configs.planets.luna,
-            configs.planets.io,
-            configs.planets.europa,
-            configs.planets.ganymede,
-            configs.planets.callisto,
-            configs.planets.tethys,
-            configs.planets.rhea,
-            configs.planets.titan,
-            configs.planets.iapetus,
-            configs.planets.triton,
-        ]
-
-        for planet in self.planets:
-            planet.draw_location = planet.px_location()
+        cfg.set_sun_draw_location(self.get_size())
+        self.planets = cfg.get_planets()
+        self.fleets = cfg.get_fleets()
 
     def draw_planets(self):
         for planet in self.planets:
@@ -117,16 +82,28 @@ class Application(pyglet.window.Window):
         if symbol == key.SPACE:
             game_clock.switch_paused()
 
-    def on_resize(self, width, height):
-        if self.screen_mode != ScreenMode.MAP:
-            return
-        if self.fullscreen:
-            return
-        # Set window values
-        self.width = width
-        self.height = height
-        # Initialize OpenGL context
-        self.init_gl(width, height)
+    # def on_resize(self, width, height):
+    #     if self.screen_mode != ScreenMode.MAP:
+    #         return
+    #     if self.fullscreen:
+    #         return
+    #     # Set window values
+    #     self.width = width
+    #     self.height = height
+    #     # Initialize OpenGL context
+    #     self.init_gl(width, height)
+
+    def get_clicked_planet(self, x, y):
+        for planet in self.planets:
+            if planet.bounds_contain(x, y) and planet.can_zoom():
+                return planet
+        return None
+
+    def get_clicked_fleet(self, x, y):
+        for fleet in self.fleets():
+            if fleet.bounds_contain(x, y):
+                return fleet
+        return None
 
     def on_mouse_press(self, x, y, button, modifiers):
         t = time.time()
@@ -136,25 +113,42 @@ class Application(pyglet.window.Window):
             self.click_count = 1
             self.click_time = time.time()
 
+        # SINGLE CLICK
+        if self.click_count == 1:
+            p = self.get_clicked_planet(x, y)
+            if p is not None:
+                self.selected_planet = p
+                return
+            f = self.get_clicked_fleet(x, y)
+            if f is not None:
+                self.selected_fleet = f
+                return
+            # clicked on nothing
+            self.selected_planet = None
+            self.selected_fleet = None
+
         # DOUBLE CLICK
         if self.click_count >= 2:
-            for planet in self.planets:
-                if planet.bounds_contain(x, y) and planet.can_zoom():
-                    self.zoomed_planet = planet
-                    self.screen_mode = ScreenMode.CLOSEUP
-                    return
+            p = self.get_clicked_planet(x, y)
+            if p is not None:
+                self.zoomed_planet = p
+                self.screen_mode = ScreenMode.CLOSEUP
+                return
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         # Move camera
         if self.screen_mode != ScreenMode.MAP:
             return
-        self.left -= dx * self.zoom_level
-        self.right -= dx * self.zoom_level
-        self.bottom -= dy * self.zoom_level
-        self.top -= dy * self.zoom_level
+        # self.left -= dx * self.zoom_level
+        # self.right -= dx * self.zoom_level
+        # self.bottom -= dy * self.zoom_level
+        # self.top -= dy * self.zoom_level
 
         for planet in self.planets:
             planet.translate_px(-dx, -dy, self.zoom_level)
+
+        for fleet in self.fleets:
+            fleet.translate_px(-dx, -dy, self.zoom_level)
 
     def on_mouse_scroll(self, x, y, dx, dy):
         if self.screen_mode != ScreenMode.MAP:
@@ -175,10 +169,10 @@ class Application(pyglet.window.Window):
             self.zoomed_width *= f
             self.zoomed_height *= f
 
-            self.left = mouse_x_in_world - mouse_x * self.zoomed_width
-            self.right = mouse_x_in_world + (1 - mouse_x) * self.zoomed_width
-            self.bottom = mouse_y_in_world - mouse_y * self.zoomed_height
-            self.top = mouse_y_in_world + (1 - mouse_y) * self.zoomed_height
+            # self.left = mouse_x_in_world - mouse_x * self.zoomed_width
+            # self.right = mouse_x_in_world + (1 - mouse_x) * self.zoomed_width
+            # self.bottom = mouse_y_in_world - mouse_y * self.zoomed_height
+            # self.top = mouse_y_in_world + (1 - mouse_y) * self.zoomed_height
 
     def on_draw(self):
         # Initialize Projection matrix
@@ -196,9 +190,11 @@ class Application(pyglet.window.Window):
         glOrtho(0, width, 0, height, 1, -1)
 
         if self.screen_mode == ScreenMode.CLOSEUP:
-            pass #self.zoomed_planet.draw_zoomed()
+            self.zoomed_planet.draw_zoomed()
         else:
             self.draw_planets()
+            if self.selected_planet is not None:
+                self.selected_planet.draw_selected(self.width, self.height)
 
         # Remove default modelview matrix
         glPopMatrix()

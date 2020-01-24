@@ -45,3 +45,26 @@ def make_filled_circle(center, radius, color):
         glVertex2f(x + dx, y + dy)
         dx, dy = (dx * c - dy * s), (dy * c + dx * s)
     glEnd()
+
+
+class LabeledRect(object):
+
+    def __init__(self, origin, width, height, color, label=''):
+        self.origin = origin
+        self.width = width
+        self.height = height
+        self.color = color
+        self.label = label
+
+
+def make_filled_rectangle(origin, width, height, color):
+    x, y = origin
+    colors = list(color) * 4
+    pyglet.graphics.draw(4, pyglet.gl.GL_QUADS, ('v2f',
+                                                 [x, y,
+                                                  x + width, y,
+                                                  x + width, y + height,
+                                                  x, y + height]),
+                         ('c3B', colors)
+                         )
+

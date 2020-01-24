@@ -2,29 +2,26 @@ from src.map.NavigationComputer import RadialPosition
 from src.map.astronomical_util import radial_location_px_to_cartesian_px
 from src.gameplay.EventManager import event_manager, Frequency
 
+
 class Location(object):
 
     # details
     name = ''
-    sectors = []
-    pops = []
 
     # location
-    draw_location = (0, 0)
+    draw_location = (0, 0)  # must be configured dynamically
 
     def __init__(self,
                  name='',
                  radial_position=None,
                  cartesian_position=None,
                  orbits=True,
-                 draw_location=None,
                  ):
         self.name = name
         assert radial_position is not cartesian_position  # not both None
         self.radial_position = radial_position
         self.cartesian_position = cartesian_position
         self.orbits = orbits
-        self.draw_location = draw_location
 
         if self.orbits:
             event_manager.register_periodic_event(Frequency.HOURLY, self.move_in_orbit)

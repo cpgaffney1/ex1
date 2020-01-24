@@ -1,7 +1,6 @@
-from src.map.Location import Location
 from enum import Enum
-from src.map.NavigationComputer import nav_computer, FlightPlan, Position
-from src.map.astronomical_util import radial_position_to_cartesian
+import os
+from configs.factions import mars, earth
 import random
 
 
@@ -13,31 +12,49 @@ class ShipType(Enum):
     CARGO = 5
 
 
-class Ship(Location):
+class Ship(object):
 
     flight_plan = None  # FlightPlan object
 
     def __init__(self,
                  name='',
                  ship_type=None,  # ShipType
-                 anchor=None,  # Planet object
+                 faction=None
                  ):
-        Location.__init__(self)
-        self.name = name
         self.ship_type = ship_type
-        self.anchor = anchor
-        anchor_pts = self.anchor.anchor_points()
-        loc = anchor_pts[0]
-        if bool(random.getrandbits(1)):
-            loc = anchor_pts[1]
-
-        self.position = radial_position_to_cartesian(loc)
-
+        self.faction = faction
+        self.name = name
         if not self.name:
             self.assign_random_name()
 
     def assign_random_name(self):
-        pass
+        data_folder = 'data'
+        faction_folder = ''
+        if self.faction == mars:
+            faction_folder = 'mcrn'
+        elif self.faction == earth:
+            faction_folder = 'unn'
+        fname = ''
+        if self.ship_type == ShipType.BATTLESHIP:
+            fname = 'battleship.txt'
+        elif self.ship_type == ShipType.CRUISER:
+            fname = 'cruiser.txt'
+        elif self.ship_type == ShipType.DESTROYER:
+            fname = 'destroyer.txt'
+        elif self.ship_type == ShipType.CORVETTE:
+            fname = 'corvette.txt'
+        path = os.path.join(data_folder, faction_folder, fname)
+        with open(path) as f:
+            names = f.readlines()
+        names = [x.strip() for x in names]
+
+        while True:
+            name = random.choice(names)
+            if name not in self.faction.used_ship_names:
+                self.name = name
+                break
+
+
 
 
 

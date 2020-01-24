@@ -1,9 +1,36 @@
 import numpy as np
 from src.map.NavigationComputer import Position
+from enum import Enum
 
 AU_PIXEL_FACTOR = 300.
 MILLI_AU_PIXEL_FACTOR = AU_PIXEL_FACTOR / 1000.
 AU_TO_KM = 1.496e+8
+
+
+class PlanetType(Enum):
+    STAR = 1
+    PLANET = 2
+    GAS_GIANT = 3
+    DWARF_PLANET = 4
+    MOON = 5
+    ASTEROID = 6
+    COMET = 7
+
+
+# RADIUS IN MILLI AU
+planet_type_to_radius = {
+    PlanetType.STAR: 200,
+    PlanetType.PLANET: 50,
+    PlanetType.GAS_GIANT: 100,
+    PlanetType.DWARF_PLANET: 25,
+    PlanetType.MOON: 25,
+    PlanetType.ASTEROID: 10,
+    PlanetType.COMET: 10,
+}
+
+
+def planet_radius(planet_type):
+    return planet_type_to_radius[planet_type]
 
 
 def radial_location_px_to_cartesian_px(primary_location, radius, degrees):

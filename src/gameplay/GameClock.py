@@ -59,8 +59,8 @@ GAME_SPEED = GameSpeed.FAST
 # converts real seconds to game seconds
 _game_speed_mapping = {
     GameSpeed.SLOW: 60 * 60,
-    GameSpeed.MEDIUM: 60 * 60 * 24,
-    GameSpeed.FAST: 60 * 60 * 24 * 7,
+    GameSpeed.MEDIUM: 60 * 60 * 12,
+    GameSpeed.FAST: 60 * 60 * 24 * 2,
 }
 
 # Keeps track of game time in seconds. Game time may run faster or slower than real time
